@@ -1,0 +1,56 @@
+
+fullnameOverride: demoapp
+#########################################################
+#              DNS Details                              #
+#########################################################
+
+dns:
+  hostname: demoapp.it-travellers.com
+  certificateARN: arn:aws:acm:eu-west-1:002857694718:certificate/82b0a635-4427-45e0-acb2-e7ba7af3ddcf
+
+applications:
+#########################################################
+#     Values for nginx Containers                  #
+#########################################################
+  nginx:
+    replicasMin: 1
+    replicasDesired: 1
+    replicasMax: 2
+    targetCPUUtilizationPercentage: 80
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "200m"  
+    image: 
+      repository: 002857694718.dkr.ecr.eu-west-1.amazonaws.com
+      name: webapp
+      type: nginx 
+      tag: latest
+      pullPolicy: Always 
+    service:
+      port: 80
+      scheme: http 
+      type: NodePort
+
+#########################################################
+#     Values for nodejs Containers                  #
+#########################################################
+  nodejs:
+    replicasMin: 1
+    replicasDesired: 1
+    replicasMax: 2
+    targetCPUUtilizationPercentage: 80
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "200m"  
+    image: 
+      repository: 002857694718.dkr.ecr.eu-west-1.amazonaws.com
+      name: node-api
+      type: nodejs
+      tag: latest
+      pullPolicy: Always 
+    service:
+      port: 4000
+      scheme: http 
+      type: ClusterIP

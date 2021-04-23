@@ -1,0 +1,24 @@
+{{ $global := . }}
+{{ range .Values.applications -}}
+{{ $application := . }}
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ template "demo-k8s.fullname" $global }}-{{ $application.image.name }}-hpa
+  namespace: {{ $global.Release.Namespace }}
+  labels:
+    app: {{ template "demo-k8s.fullname" $global }}-{{ $application.image.name }}
+    chart: "{{ $global.Chart.Name }}-{{ $global.Chart.Version }}"
+    release: "{{ $global.Release.Name }}" 
+spec:
+  minReplicas: {{ $application.replicasMin }}
+  maxReplicas: {{ $application.replicasMax }}
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ template "demo-k8s.fullname" $global }}-{{ $application.image.name }}-deployment
+  targetCPUUtilizationPercentage: {{ $application.targetCPUUtilizationPercentage }}
+  
+---
+{{- end }}

@@ -1,0 +1,37 @@
+{{ $global := . }}
+{{ range .Values.applications -}}
+{{ $application := . }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "demo-k8s.fullname" $global }}-{{ $application.image.name }}-deployment
+  namespace: {{ $global.Release.Namespace }}
+  labels:
+    app: {{ template "demo-k8s.fullname" $global }}-{{ $application.image.name }}
+    chart: "{{ $global.Chart.Name }}-{{ $global.Chart.Version }}"
+    release: "{{ $global.Release.Name }}"   
+spec:
+  replicas: {{ $application.replicasDesired }}
+  selector:
+    matchLabels:
+      app: {{ template "demo-k8s.fullname" $global }}-{{ $application.image.name }}
+      chart: "{{ $global.Chart.Name }}-{{ $global.Chart.Version }}"
+      release: "{{ $global.Release.Name }}"
+  template:
+    metadata:
+      labels:
+        app: {{ template "demo-k8s.fullname" $global }}-{{ $application.image.name }}
+        chart: "{{ $global.Chart.Name }}-{{ $global.Chart.Version }}"
+        release: "{{ $global.Release.Name }}"      
+    spec:
+      containers:
+      - name: {{ template "demo-k8s.fullname" $global }}-{{ $application.image.name }}
+        image: "{{ $application.image.repository }}/{{ $application.image.name }}:{{ $application.image.tag }}"
+        imagePullPolicy: {{ $application.image.pullPolicy }}
+        ports:
+        - containerPort: {{ $application.service.port }}
+        resources:
+{{ toYaml $application.resources | indent 10 }}
+---
+{{ end -}}

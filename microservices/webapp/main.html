@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+<meta charset="UTF-8">
+<title>Word Substitution API</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+<script src="view/app.js"></script>
+<style>
+a {
+	cursor: pointer;
+}
+.button {
+    display: block;
+    width: 115px;
+    height: 25px;
+    background: #4E9CAF;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    line-height: 25px;
+}
+</style>
+</head>
+<body>
+	<div ng-controller="MainCtrl">
+			<table>
+				<tr>
+					<textarea id="conversionText" ng-model="conversionText" rows="4" cols="50">	
+					</textarea>
+				</tr>
+				<tr>
+				    <a class="button" ng-click="convertText(conversionText)">Convert Text</a> 
+			    </tr>
+				<tr>
+					<textarea id="convertedText" ng-model="convertedText" rows="4" cols="50">		
+					</textarea>
+				</tr>
+			</table>
+			<br /> <br /> 
+		<br /> <br />
+		<p style="color: green">{{message}}</p>
+		<p style="color: red">{{errorMessage}}</p>
+	</div>
+</body>
+</html>
